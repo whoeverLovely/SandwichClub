@@ -2,8 +2,10 @@ package com.udacity.sandwichclub;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +59,25 @@ public class DetailActivity extends AppCompatActivity {
                 .into(ingredientsIv);
 
         setTitle(sandwich.getMainName());
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+            default:
+                throw new RuntimeException("The menu item selected is unknown.");
+        }
+    }
+
+
 
     private void closeOnError() {
         finish();
@@ -70,7 +90,7 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView alsoKnownAsTV = findViewById(R.id.also_known);
         List<String> alsoKnownAs = sandwich.getAlsoKnownAs();
-        String alsoKnownStr = null;
+        String alsoKnownStr = "";
         for(String s:alsoKnownAs) {
             alsoKnownStr = alsoKnownStr+s+"  ";
         }
@@ -81,9 +101,12 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView ingredientsTV = findViewById(R.id.ingredients);
         List<String> ingredientsList = sandwich.getIngredients();
-        String ingredients = null;
-        for(String s:ingredientsList) {
-            ingredients = ingredients+s+"  ";
+        String ingredients = "";
+        for(int i = 0; i < ingredientsList.size(); i++) {
+            if(i == ingredientsList.size())
+                ingredients = ingredients + ingredientsList.get(i);
+            else
+                ingredients = ingredients + ingredientsList.get(i) + ", ";
         }
         ingredientsTV.setText(ingredients);
 
